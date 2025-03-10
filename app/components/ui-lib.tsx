@@ -294,6 +294,42 @@ export function PasswordInput(
   );
 }
 
+export function UserInput(
+  props: HTMLProps<HTMLInputElement> & { aria?: string },
+) {
+  return (
+    <div className={"user-input-container"}>
+      <span>{props.label}</span>
+      <input {...props} type="text" className={"user-input"} />
+    </div>
+  );
+}
+
+export function UserPassword(
+  props: HTMLProps<HTMLInputElement> & { aria?: string },
+) {
+  const [visible, setVisible] = useState(false);
+  function changeVisibility() {
+    setVisible(!visible);
+  }
+
+  return (
+    <div className={"user-password-container"}>
+      <span>{props.label}</span>
+      <input
+        {...props}
+        type={visible ? "text" : "password"}
+        className={"password-input"}
+      />
+      <IconButton
+        icon={visible ? <EyeIcon /> : <EyeOffIcon />}
+        onClick={changeVisibility}
+        className={"password-eye"}
+      />
+    </div>
+  );
+}
+
 export function Select(
   props: React.DetailedHTMLProps<
     React.SelectHTMLAttributes<HTMLSelectElement> & {

@@ -100,6 +100,18 @@ if (mode !== "export") {
         source: "/api/proxy/alibaba/:path*",
         destination: "https://dashscope.aliyuncs.com/api/:path*",
       },
+      {
+        source: "/api/user/:path*",
+        destination: "http://123.56.80.240:8800/api/user/:path*",
+      },
+      {
+        source: "/api/token/:path*",
+        destination: "http://123.56.80.240:8800/api/token/:path*",
+      },
+      {
+        source: "/api/tk/:path*",
+        destination: "http://123.56.80.240:8800/api/tk/:path*",
+      },
     ];
 
     return {

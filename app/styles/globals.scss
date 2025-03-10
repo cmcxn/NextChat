@@ -362,6 +362,46 @@ pre {
     overflow: auto;
   }
 }
+.user-input-container {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  width: 450px;
+  span {
+    font-size: 16px;
+    color: #323232;
+    width: 120px;
+    text-align: right;
+  }
+  .user-input {
+    width: 250px;
+    max-width: 1000px;
+    text-align: left;
+  }
+}
+.user-password-container {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  width: 450px;
+  span {
+    font-size: 16px;
+    width: 120px;
+    text-align: right;
+    color: #323232;
+  }
+  .password-input {
+    width: 250px;
+    max-width: 1000px;
+    text-align: left;
+  }
+  .password-eye {
+    margin-left: 4px;
+  }
+}
+
+
+
 
 .password-input-container {
   max-width: 50%;

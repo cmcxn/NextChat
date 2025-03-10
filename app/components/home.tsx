@@ -3,6 +3,10 @@
 require("../polyfill");
 
 import { useEffect, useState } from "react";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import styles from "./home.module.scss";
 
 import BotIcon from "../icons/bot.svg";
@@ -21,10 +25,13 @@ import {
   Route,
   Routes,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import { SideBar } from "./sidebar";
 import { useAppConfig } from "../store/config";
 import { AuthPage } from "./auth";
+import { LoginPage } from "./login";
+import { RegisterPage } from "./register";
 import { getClientConfig } from "../config/client";
 import { type ClientApi, getClientApi } from "../client/api";
 import { useAccessStore } from "../store";
@@ -163,6 +170,8 @@ function Screen() {
   const isArtifact = location.pathname.includes(Path.Artifacts);
   const isHome = location.pathname === Path.Home;
   const isAuth = location.pathname === Path.Auth;
+  const isLogin = location.pathname === Path.Login;
+  const isRegister = location.pathname === Path.Register;
   const isSd = location.pathname === Path.Sd;
   const isSdNew = location.pathname === Path.SdNew;
 
@@ -183,6 +192,8 @@ function Screen() {
   }
   const renderContent = () => {
     if (isAuth) return <AuthPage />;
+    if (isLogin) return <LoginPage />;
+    if (isRegister) return <RegisterPage />;
     if (isSd) return <Sd />;
     if (isSdNew) return <Sd />;
     return (
@@ -234,7 +245,29 @@ export function useLoadData() {
   }, []);
 }
 
-export function Home() {
+function HomeContent() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const res = await fetch("/api/user/self", {
+          method: "GET",
+          credentials: "include", // 包含 cookie
+        });
+        const data = await res.json();
+        if (!data.success) {
+          navigate("/login"); // 跳转到登录页面
+        }
+      } catch (error) {
+        console.error("Login check failed:", error);
+        navigate("/login"); // 在错误情况下也跳转
+      }
+    };
+
+    checkLoginStatus();
+  }, [navigate]);
+
   useSwitchTheme();
   useLoadData();
   useHtmlLang();
@@ -262,10 +295,15 @@ export function Home() {
     return <Loading />;
   }
 
+  return <Screen />;
+}
+
+export function Home() {
   return (
     <ErrorBoundary>
       <Router>
-        <Screen />
+        <HomeContent />
+        <ToastContainer />
       </Router>
     </ErrorBoundary>
   );

@@ -24,6 +24,8 @@ import PromptIcon from "../icons/prompt.svg";
 import MaskIcon from "../icons/mask.svg";
 import MaxIcon from "../icons/max.svg";
 import MinIcon from "../icons/min.svg";
+import LogoutIcon from "../icons/logout.svg";
+
 import ResetIcon from "../icons/reload.svg";
 import ReloadIcon from "../icons/reload.svg";
 import BreakIcon from "../icons/break.svg";
@@ -1756,6 +1758,23 @@ function _Chat() {
                     config.update(
                       (config) => (config.tightBorder = !config.tightBorder),
                     );
+                  }}
+                />
+              </div>
+            )}
+            {showMaxIcon && (
+              <div className="window-action-button">
+                <IconButton
+                  icon={config.tightBorder ? <LogoutIcon /> : <LogoutIcon />}
+                  bordered
+                  title={Locale.Chat.Actions.Logout}
+                  aria={Locale.Chat.Actions.Logout}
+                  onClick={() => {
+                    document.cookie.split(";").forEach((cookie) => {
+                      const name = cookie.split("=")[0].trim();
+                      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+                    });
+                    navigate(Path.Register);
                   }}
                 />
               </div>
