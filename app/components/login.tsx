@@ -71,12 +71,7 @@ export function LoginPage() {
                 .then((res3) => {
                   localStorage.setItem(
                     "available_models",
-                    JSON.stringify([
-                      "deepseek-r1:32b",
-                      "deepseek-r1:70b",
-                      "gemma2:27b",
-                      "qwen2.5:32b",
-                    ]),
+                    JSON.stringify(res3.data),
                   );
                 });
             });
