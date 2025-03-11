@@ -25,6 +25,10 @@ export function LoginPage() {
   const goRegister = () => navigate(Path.Register);
   // const goChat = () => navigate(Path.Chat);
   const goChat = () => {
+    if (!userInput || !userPassword) {
+      toast.error("请输入用户名或密码");
+      return;
+    }
     fetch("/api/user/login", {
       method: "POST",
       headers: {
@@ -35,13 +39,13 @@ export function LoginPage() {
       .then((res1) => res1.json())
       .then((res1) => {
         if (res1.success) {
-          localStorage.setItem("username", res1.data.username);
+          storage.setItem("username", res1.data.username);
           fetch("/api/user/self", {
             method: "GET",
           })
             .then((res2) => res2.json())
             .then((res2) => {
-              localStorage.setItem("access_token", res2.data.access_token);
+              storage.setItem("access_token", res2.data.access_token);
 
               accessStore.update(
                 (access) =>
@@ -51,14 +55,13 @@ export function LoginPage() {
               fetch(`/api/tk/`, {
                 method: "GET",
                 headers: {
-                  Authorization:
-                    "Bearer " + localStorage.getItem("access_token"),
+                  Authorization: "Bearer " + storage.getItem("access_token"),
                 },
               })
                 .then((res3) => res3.json())
                 .then((res3) => {
-                  if (res3) {
-                    localStorage.setItem("key", "sk-" + res3.data?.[0]?.key);
+                  if (Array.isArray(res3.data)) {
+                    storage.setItem("key", "sk-" + res3.data?.[0]?.key);
                     accessStore.update(
                       (access) =>
                         (access.openaiApiKey = "sk-" + res3.data?.[0]?.key),
@@ -69,13 +72,13 @@ export function LoginPage() {
               fetch(`/api/user/available_models`)
                 .then((res3) => res3.json())
                 .then((res3) => {
-                  localStorage.setItem(
+                  storage.setItem(
                     "available_models",
                     JSON.stringify(res3.data),
                   );
+                  goHome();
                 });
             });
-          goHome();
         } else {
           toast.error(res1.message);
         }

@@ -10,7 +10,7 @@ export function useAllModels() {
     try {
       const modelString: any = storage.getItem("available_models");
       const modelList: any = JSON.parse(modelString);
-      modelList.forEach((item: any, index: any) => {
+      (modelList || []).forEach((item: any, index: any) => {
         modelsArr.push({
           name: item,
           available: true,

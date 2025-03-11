@@ -179,6 +179,27 @@ function Screen() {
   const shouldTightBorder =
     getClientConfig()?.isApp || (config.tightBorder && !isMobileScreen);
 
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!isRegister && !isLogin) {
+      const checkLoginStatus = async () => {
+        try {
+          const res = await fetch("/api/user/self", {
+            method: "GET",
+            credentials: "include", // 包含 cookie
+          });
+          const data = await res.json();
+          if (!data.success) {
+            navigate("/login"); // 跳转到登录页面
+          }
+        } catch (error) {
+          console.error("Login check failed:", error);
+          navigate("/login"); // 在错误情况下也跳转
+        }
+      };
+      checkLoginStatus();
+    }
+  }, [navigate]);
   useEffect(() => {
     loadAsyncGoogleFont();
   }, []);
@@ -246,28 +267,6 @@ export function useLoadData() {
 }
 
 function HomeContent() {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const res = await fetch("/api/user/self", {
-          method: "GET",
-          credentials: "include", // 包含 cookie
-        });
-        const data = await res.json();
-        if (!data.success) {
-          navigate("/login"); // 跳转到登录页面
-        }
-      } catch (error) {
-        console.error("Login check failed:", error);
-        navigate("/login"); // 在错误情况下也跳转
-      }
-    };
-
-    checkLoginStatus();
-  }, [navigate]);
-
   useSwitchTheme();
   useLoadData();
   useHtmlLang();

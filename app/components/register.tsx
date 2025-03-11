@@ -24,6 +24,18 @@ export function RegisterPage() {
   const accessStore = useAccessStore();
   const goLogin = () => navigate(Path.Login);
   const goChat = () => {
+    if (!userInput || !userPassword || !userPassword2) {
+      toast.error("请输入用户名或密码");
+      return;
+    }
+    if (userInput.length > 12) {
+      toast.error("用户名最长12位");
+      return;
+    }
+    if (userPassword != userPassword2) {
+      toast.error("两次密码必须一致");
+      return;
+    }
     fetch("/api/user/register", {
       method: "POST",
       headers: {
