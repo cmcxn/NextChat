@@ -76,6 +76,10 @@ export function LoginPage() {
                     "available_models",
                     JSON.stringify(res3.data),
                   );
+                  // 默认使用自定义接口
+                  accessStore.update((state) => {
+                    state.useCustomConfig = true;
+                  });
                   goHome();
                 });
             });
@@ -125,6 +129,11 @@ export function LoginPage() {
         label={Locale.Login.PasswordInputLabel}
         placeholder={Locale.Login.PasswordInputPassword}
         value={userPassword}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            goChat();
+          }
+        }}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           setUserPassword(event.target.value);
         }}
