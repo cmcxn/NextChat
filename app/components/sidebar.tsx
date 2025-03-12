@@ -243,6 +243,14 @@ export function SideBar(props: { className?: string }) {
     checkMcpStatus();
   }, []);
 
+  const [title, setTitle] = useState("NextChat");
+
+  useEffect(() => {
+    const username = localStorage.getItem("username");
+    if (username) {
+      setTitle(`${title}(${username})`);
+    }
+  }, []);
   return (
     <SideBarContainer
       onDragStart={onDragStart}
@@ -250,7 +258,7 @@ export function SideBar(props: { className?: string }) {
       {...props}
     >
       <SideBarHeader
-        title="NextChat"
+        title={title}
         subTitle="Build your own AI assistant."
         logo={<ChatGptIcon />}
         shouldNarrow={shouldNarrow}
