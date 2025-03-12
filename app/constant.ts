@@ -470,7 +470,21 @@ export const VISION_MODEL_REGEXES = [
 
 export const EXCLUDE_VISION_MODEL_REGEXES = [/claude-3-5-haiku-20241022/];
 
-export const DEFAULT_MODELS = [] as const;
+interface Provider {
+  id: string;
+  providerName: string;
+  providerType: string;
+  sorted: number;
+}
+
+interface Model {
+  name: string;
+  available: boolean;
+  sorted: number;
+  provider: Provider;
+}
+
+export const DEFAULT_MODELS: readonly Model[] = [];
 
 export const CHAT_PAGE_SIZE = 15;
 export const MAX_RENDER_MSG_COUNT = 45;

@@ -29,28 +29,6 @@ const cn = {
     TopTips:
       "🥳 NextChat AI 首发优惠，立刻解锁 OpenAI o1, GPT-4o, Claude-3.5 等最新大模型",
   },
-  Login: {
-    Title: "用户登录",
-    Tips: "管理员开启了登录验证，请在下方填入用户名与密码",
-    UserInputLabel: "用户名：",
-    UserInputValue: "在此处填写用户名",
-    PasswordInputLabel: "密码：",
-    PasswordInputPassword: "在此处填写密码",
-    Confirm: "登录",
-    SaasTips: "还没有账号，立即去注册",
-  },
-  Register: {
-    Title: "用户注册",
-    Tips: "管理员开启了登录验证，请在下方填入用户名与密码进行注册",
-    UserInputLabel: "用户名：",
-    UserInputValue: "输入用户名，最长 12 位",
-    PasswordInputLabel: "密码：",
-    PasswordInputPassword: "输入密码，最短 8 位，最长 20 位",
-    PasswordInputLabel2: "密码：",
-    PasswordInputPassword2: "输入密码，最短 8 位，最长 20 位",
-    Confirm: "注册",
-    SaasTips: "已有账号，立即去登录",
-  },
   ChatItem: {
     ChatItemCount: (count: number) => `${count} 条对话`,
   },
@@ -80,7 +58,6 @@ const cn = {
       RefreshToast: "已发送刷新标题请求",
       Speech: "朗读",
       StopSpeech: "停止",
-      Logout: "退出登录",
     },
     Commands: {
       new: "新建聊天",

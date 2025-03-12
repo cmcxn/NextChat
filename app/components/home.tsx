@@ -3,7 +3,6 @@
 require("../polyfill");
 
 import { useEffect, useState } from "react";
-
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -25,7 +24,6 @@ import {
   Route,
   Routes,
   useLocation,
-  useNavigate,
 } from "react-router-dom";
 import { SideBar } from "./sidebar";
 import { useAppConfig } from "../store/config";
@@ -179,27 +177,26 @@ function Screen() {
   const shouldTightBorder =
     getClientConfig()?.isApp || (config.tightBorder && !isMobileScreen);
 
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!isRegister && !isLogin) {
-      const checkLoginStatus = async () => {
-        try {
-          const res = await fetch("/api/user/self", {
-            method: "GET",
-            credentials: "include", // 包含 cookie
-          });
-          const data = await res.json();
-          if (!data.success) {
-            navigate("/login"); // 跳转到登录页面
-          }
-        } catch (error) {
-          console.error("Login check failed:", error);
-          navigate("/login"); // 在错误情况下也跳转
-        }
-      };
-      checkLoginStatus();
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   if (!isRegister && !isLogin) {
+  //     const checkLoginStatus = async () => {
+  //       try {
+  //         const res = await fetch("/api/user/self", {
+  //           method: "GET"
+  //         });
+  //         const data = await res.json();
+  //         if (!data.success) {
+  //          // TODO
+  //         }
+  //       } catch (error) {
+
+  //         console.error("Login check failed:", error);
+  //       }
+  //     };
+  //     checkLoginStatus();
+  //   }
+  // }, [isRegister,isLogin]);
+
   useEffect(() => {
     loadAsyncGoogleFont();
   }, []);
@@ -266,7 +263,7 @@ export function useLoadData() {
   }, []);
 }
 
-function HomeContent() {
+export function Home() {
   useSwitchTheme();
   useLoadData();
   useHtmlLang();
@@ -294,14 +291,10 @@ function HomeContent() {
     return <Loading />;
   }
 
-  return <Screen />;
-}
-
-export function Home() {
   return (
     <ErrorBoundary>
       <Router>
-        <HomeContent />
+        <Screen />
         <ToastContainer />
       </Router>
     </ErrorBoundary>

@@ -533,13 +533,13 @@ export function ChatActions(props: {
     session.mask.modelConfig?.providerName || ServiceProvider.OpenAI;
   const allModels = useAllModels();
   const models = useMemo(() => {
-    const filteredModels = allModels.filter((m) => m.available);
-    const defaultModel = filteredModels.find((m) => m.isDefault);
+    const filteredModels = allModels.filter((m: any) => m.available);
+    const defaultModel = filteredModels.find((m: any) => m.isDefault);
 
     if (defaultModel) {
       const arr = [
         defaultModel,
-        ...filteredModels.filter((m) => m !== defaultModel),
+        ...filteredModels.filter((m: any) => m !== defaultModel),
       ];
       return arr;
     } else {
@@ -548,7 +548,7 @@ export function ChatActions(props: {
   }, [allModels]);
   const currentModelName = useMemo(() => {
     const model = models.find(
-      (m) =>
+      (m: any) =>
         m.name == currentModel &&
         m?.provider?.providerName == currentProviderName,
     );
@@ -581,10 +581,12 @@ export function ChatActions(props: {
 
     // if current model is not available
     // switch to first available model
-    const isUnavailableModel = !models.some((m) => m.name === currentModel);
+    const isUnavailableModel = !models.some(
+      (m: any) => m.name === currentModel,
+    );
     if (isUnavailableModel && models.length > 0) {
       // show next model to default model if exist
-      let nextModel = models.find((model) => model.isDefault) || models[0];
+      let nextModel = models.find((model: any) => model.isDefault) || models[0];
       chatStore.updateTargetSession(session, (session) => {
         session.mask.modelConfig.model = nextModel.name;
         session.mask.modelConfig.providerName = nextModel?.provider
@@ -684,7 +686,7 @@ export function ChatActions(props: {
         {showModelSelector && (
           <Selector
             defaultSelectedValue={`${currentModel}@${currentProviderName}`}
-            items={models.map((m) => ({
+            items={models.map((m: any) => ({
               title: `${m.displayName}${
                 m?.provider?.providerName
                   ? " (" + m?.provider?.providerName + ")"
@@ -704,7 +706,7 @@ export function ChatActions(props: {
               });
               if (providerName == "ByteDance") {
                 const selectedModel = models.find(
-                  (m) =>
+                  (m: any) =>
                     m.name == model &&
                     m?.provider?.providerName == providerName,
                 );
@@ -1767,13 +1769,14 @@ function _Chat() {
                 <IconButton
                   icon={config.tightBorder ? <LogoutIcon /> : <LogoutIcon />}
                   bordered
-                  title={Locale.Chat.Actions.Logout}
-                  aria={Locale.Chat.Actions.Logout}
+                  title="退出登录"
+                  aria="退出登录"
                   onClick={() => {
                     document.cookie.split(";").forEach((cookie) => {
                       const name = cookie.split("=")[0].trim();
                       document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
                     });
+                    localStorage.clear();
                     navigate(Path.Login);
                   }}
                 />

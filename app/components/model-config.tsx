@@ -15,7 +15,7 @@ export function ModelConfigList(props: {
 }) {
   const allModels = useAllModels();
   const groupModels = groupBy(
-    allModels.filter((v) => v.available),
+    allModels.filter((v: any) => v.available),
     "provider.providerName",
   );
   const value = `${props.modelConfig.model}@${props.modelConfig?.providerName}`;
@@ -260,8 +260,8 @@ export function ModelConfigList(props: {
           }}
         >
           {allModels
-            .filter((v) => v.available)
-            .map((v, i) => (
+            .filter((v: any) => v.available)
+            .map((v: any, i: any) => (
               <option value={`${v.name}@${v.provider?.providerName}`} key={i}>
                 {v.displayName}({v.provider?.providerName})
               </option>

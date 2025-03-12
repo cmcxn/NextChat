@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Path } from "../constant";
 import { useAccessStore } from "../store";
-import Locale from "../locales";
+import Locale from "../locales/custom";
 import BotIcon from "../icons/bot.svg";
 import { getClientConfig } from "../config/client";
 import { UserInput, UserPassword } from "./ui-lib";
