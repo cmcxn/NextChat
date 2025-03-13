@@ -2197,14 +2197,18 @@ export function Chat() {
     })
       .then((res) => res.json())
       .then((res) => {
-        accessStore.update((state) => {
-          // 剩余额度
-          localStorage.setItem("quota", res.data.quota);
-          const quotaPerUnit = parseFloat(
-            localStorage.getItem("quota_per_unit") || "0",
-          );
-          state.$quota = ((res.data.quota || 0) / quotaPerUnit).toFixed(2);
-        });
+        if (res.success) {
+          accessStore.update((state) => {
+            // 剩余额度
+            localStorage.setItem("quota", res.data.quota);
+            const quotaPerUnit = parseFloat(
+              localStorage.getItem("quota_per_unit") || "0",
+            );
+            state.$quota = ((res.data.quota || 0) / quotaPerUnit).toFixed(2);
+          });
+        } else {
+          window.location.href = window.location.origin + "/#/login";
+        }
       });
   }, []);
   return <_Chat key={session.id}></_Chat>;
