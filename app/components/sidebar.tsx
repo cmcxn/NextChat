@@ -4,7 +4,7 @@ import styles from "./home.module.scss";
 
 import { IconButton } from "./button";
 import SettingsIcon from "../icons/settings.svg";
-import GithubIcon from "../icons/github.svg";
+import UserIcon from "../icons/user.svg";
 import ChatGptIcon from "../icons/chatgpt.svg";
 import AddIcon from "../icons/add.svg";
 import DeleteIcon from "../icons/delete.svg";
@@ -15,7 +15,7 @@ import DiscoveryIcon from "../icons/discovery.svg";
 
 import Locale from "../locales";
 
-import { useAppConfig, useChatStore } from "../store";
+import { useAppConfig, useChatStore, useAccessStore } from "../store";
 
 import {
   DEFAULT_SIDEBAR_WIDTH,
@@ -23,7 +23,7 @@ import {
   MIN_SIDEBAR_WIDTH,
   NARROW_SIDEBAR_WIDTH,
   Path,
-  REPO_URL,
+  USER_URL,
 } from "../constant";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -243,14 +243,8 @@ export function SideBar(props: { className?: string }) {
     checkMcpStatus();
   }, []);
 
-  const [title, setTitle] = useState("NextChat");
+  const accessStore = useAccessStore();
 
-  useEffect(() => {
-    const username = localStorage.getItem("username");
-    if (username) {
-      setTitle(`${title}(${username})`);
-    }
-  }, []);
   return (
     <SideBarContainer
       onDragStart={onDragStart}
@@ -258,7 +252,9 @@ export function SideBar(props: { className?: string }) {
       {...props}
     >
       <SideBarHeader
-        title={title}
+        title={
+          localStorage.getItem("username") + "($" + accessStore.$quota + ")"
+        }
         subTitle="Build your own AI assistant."
         logo={<ChatGptIcon />}
         shouldNarrow={shouldNarrow}
@@ -345,10 +341,10 @@ export function SideBar(props: { className?: string }) {
               </Link>
             </div>
             <div className={styles["sidebar-action"]}>
-              <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
+              <a href={USER_URL} target="_blank" rel="noopener noreferrer">
                 <IconButton
                   aria={Locale.Export.MessageFromChatGPT}
-                  icon={<GithubIcon />}
+                  icon={<UserIcon />}
                   shadow
                 />
               </a>

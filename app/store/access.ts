@@ -144,6 +144,7 @@ const DEFAULT_ACCESS_STATE = {
 
   // tts config
   edgeTTSVoiceName: "zh-CN-YunxiNeural",
+  $quota: "0.00", // 剩余额度
 };
 
 export const useAccessStore = createPersistStore(

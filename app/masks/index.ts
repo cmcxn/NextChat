@@ -22,6 +22,20 @@ export const BUILTIN_MASK_STORE = {
 export const BUILTIN_MASKS: BuiltinMask[] = [];
 
 if (typeof window != "undefined") {
+  if (
+    window.location.hash != "#/login" &&
+    window.location.hash != "#/register"
+  ) {
+    fetch("/api/user/self", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (!res.success) {
+          window.location.href = window.location.origin + "/#/login";
+        }
+      });
+  }
   // run in browser skip in next server
   fetch("/masks.json")
     .then((res) => res.json())

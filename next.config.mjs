@@ -105,6 +105,10 @@ if (mode !== "export") {
         destination: "http://123.56.80.240:8800/api/user/:path*",
       },
       {
+        source: "/api/status/:path*",
+        destination: "http://123.56.80.240:8800/api/status/:path*",
+      },
+      {
         source: "/api/token/:path*",
         destination: "http://123.56.80.240:8800/api/token/:path*",
       },
