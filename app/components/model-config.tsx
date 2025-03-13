@@ -1,6 +1,6 @@
 import { ServiceProvider } from "@/app/constant";
 import { ModalConfigValidator, ModelConfig } from "../store";
-
+import { useEffect } from "react";
 import Locale from "../locales";
 import { InputRange } from "./input-range";
 import { ListItem, Select } from "./ui-lib";
@@ -20,7 +20,25 @@ export function ModelConfigList(props: {
   );
   const value = `${props.modelConfig.model}@${props.modelConfig?.providerName}`;
   const compressModelValue = `${props.modelConfig.compressModel}@${props.modelConfig?.compressProviderName}`;
-
+  // 如果没有默认，用于压缩历史记录、生成对话标题的模型
+  useEffect(() => {
+    if (!props.modelConfig.compressModel) {
+      if (localStorage.getItem("available_models")) {
+        const modelsJson = localStorage.getItem("available_models");
+        const modelsArr = modelsJson ? JSON.parse(modelsJson) : [];
+        if (modelsArr.length) {
+          let modelStr = modelsArr[0];
+          if (modelsArr.includes("qwen2.5:0.5b")) {
+            modelStr = "qwen2.5:0.5b";
+          }
+          props.updateConfig((config) => {
+            config.compressModel = modelStr;
+            config.compressProviderName = modelStr;
+          });
+        }
+      }
+    }
+  });
   return (
     <>
       <ListItem title={Locale.Settings.Model}>
@@ -263,7 +281,7 @@ export function ModelConfigList(props: {
             .filter((v: any) => v.available)
             .map((v: any, i: any) => (
               <option value={`${v.name}@${v.provider?.providerName}`} key={i}>
-                {v.displayName}({v.provider?.providerName})
+                {v.displayName}
               </option>
             ))}
         </Select>

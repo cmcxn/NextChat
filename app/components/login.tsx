@@ -100,10 +100,6 @@ export function LoginPage() {
                         "available_models",
                         JSON.stringify(res3.data),
                       );
-                      // 默认使用自定义接口
-                      accessStore.update((state) => {
-                        state.useCustomConfig = false;
-                      });
                       goHome();
                     });
                 });

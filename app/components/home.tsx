@@ -177,26 +177,6 @@ function Screen() {
   const shouldTightBorder =
     getClientConfig()?.isApp || (config.tightBorder && !isMobileScreen);
 
-  // useEffect(() => {
-  //   if (!isRegister && !isLogin) {
-  //     const checkLoginStatus = async () => {
-  //       try {
-  //         const res = await fetch("/api/user/self", {
-  //           method: "GET"
-  //         });
-  //         const data = await res.json();
-  //         if (!data.success) {
-  //          // TODO
-  //         }
-  //       } catch (error) {
-
-  //         console.error("Login check failed:", error);
-  //       }
-  //     };
-  //     checkLoginStatus();
-  //   }
-  // }, [isRegister,isLogin]);
-
   useEffect(() => {
     loadAsyncGoogleFont();
   }, []);
