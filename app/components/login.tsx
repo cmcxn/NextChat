@@ -40,47 +40,72 @@ export function LoginPage() {
       .then((res1) => {
         if (res1.success) {
           storage.setItem("username", res1.data.username);
-          fetch("/api/user/self", {
+          fetch("/api/status", {
             method: "GET",
           })
-            .then((res2) => res2.json())
-            .then((res2) => {
-              storage.setItem("access_token", res2.data.access_token);
-
-              accessStore.update(
-                (access) =>
-                  (access.openaiUrl = process.env
-                    .NEXT_PUBLIC_SERVE_URL as string),
-              );
-              fetch(`/api/tk/`, {
+            .then((res1_2) => res1_2.json())
+            .then((res1_2) => {
+              // 单位美元额度
+              storage.setItem("quota_per_unit", res1_2.data.quota_per_unit);
+              fetch("/api/user/self", {
                 method: "GET",
-                headers: {
-                  Authorization: "Bearer " + storage.getItem("access_token"),
-                },
               })
-                .then((res3) => res3.json())
-                .then((res3) => {
-                  if (Array.isArray(res3.data)) {
-                    storage.setItem("key", "sk-" + res3.data?.[0]?.key);
-                    accessStore.update(
-                      (access) =>
-                        (access.openaiApiKey = "sk-" + res3.data?.[0]?.key),
-                    );
-                  }
-                });
-
-              fetch(`/api/user/available_models`)
-                .then((res3) => res3.json())
-                .then((res3) => {
-                  storage.setItem(
-                    "available_models",
-                    JSON.stringify(res3.data),
-                  );
-                  // 默认使用自定义接口
+                .then((res2) => res2.json())
+                .then((res2) => {
+                  // 剩余额度
+                  storage.setItem("quota", res2.data.quota);
                   accessStore.update((state) => {
-                    state.useCustomConfig = true;
+                    const quotaPerUnit = parseFloat(
+                      res1_2.data.quota_per_unit || "0",
+                    );
+                    state.$quota = (
+                      (res2.data.quota || 0) / quotaPerUnit
+                    ).toFixed(2);
                   });
-                  goHome();
+                  // 换算美元
+                  storage.setItem(
+                    "$quota",
+                    (
+                      (res2.data.quota || 0) / (res1_2.data.quota_per_unit || 0)
+                    ).toFixed(2),
+                  );
+                  storage.setItem("access_token", res2.data.access_token);
+                  accessStore.update(
+                    (access) =>
+                      (access.openaiUrl = process.env
+                        .NEXT_PUBLIC_SERVE_URL as string),
+                  );
+                  fetch(`/api/tk/`, {
+                    method: "GET",
+                    headers: {
+                      Authorization:
+                        "Bearer " + storage.getItem("access_token"),
+                    },
+                  })
+                    .then((res3) => res3.json())
+                    .then((res3) => {
+                      if (Array.isArray(res3.data)) {
+                        storage.setItem("key", "sk-" + res3.data?.[0]?.key);
+                        accessStore.update(
+                          (access) =>
+                            (access.openaiApiKey = "sk-" + res3.data?.[0]?.key),
+                        );
+                      }
+                    });
+
+                  fetch(`/api/user/available_models`)
+                    .then((res3) => res3.json())
+                    .then((res3) => {
+                      storage.setItem(
+                        "available_models",
+                        JSON.stringify(res3.data),
+                      );
+                      // 默认使用自定义接口
+                      accessStore.update((state) => {
+                        state.useCustomConfig = false;
+                      });
+                      goHome();
+                    });
                 });
             });
         } else {
