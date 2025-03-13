@@ -151,6 +151,28 @@ function getSummarizeModel(
   return [currentModel, providerName];
 }
 
+function selfHandler() {
+  // 更新余额
+  fetch("/api/user/self", {
+    method: "GET",
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.success) {
+        // 剩余额度
+        localStorage.setItem("quota", res.data.quota);
+        const quotaPerUnit = parseFloat(
+          localStorage.getItem("quota_per_unit") || "0",
+        );
+        useAccessStore.setState((state) => {
+          return {
+            ...state,
+            $quota: ((res.data.quota || 0) / quotaPerUnit).toFixed(2),
+          };
+        });
+      }
+    });
+}
 function countMessages(msgs: ChatMessage[]) {
   return msgs.reduce(
     (pre, cur) => pre + estimateTokenLength(getMessageTextContent(cur)),
@@ -471,6 +493,7 @@ export const useChatStore = createPersistStore(
             });
           },
           async onFinish(message) {
+            selfHandler();
             botMessage.streaming = false;
             if (message) {
               botMessage.content = message;

@@ -1107,21 +1107,6 @@ function _Chat() {
   };
 
   const doSubmit = (userInput: string) => {
-    // 更新余额
-    fetch("/api/user/self", {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        accessStore.update((state) => {
-          // 剩余额度
-          localStorage.setItem("quota", res.data.quota);
-          const quotaPerUnit = parseFloat(
-            localStorage.getItem("quota_per_unit") || "0",
-          );
-          state.$quota = ((res.data.quota || 0) / quotaPerUnit).toFixed(2);
-        });
-      });
     if (userInput.trim() === "" && isEmpty(attachImages)) return;
     const matchCommand = chatCommands.match(userInput);
     if (matchCommand.matched) {
@@ -2204,5 +2189,23 @@ function _Chat() {
 export function Chat() {
   const chatStore = useChatStore();
   const session = chatStore.currentSession();
+  const accessStore = useAccessStore();
+  useEffect(() => {
+    // 更新余额
+    fetch("/api/user/self", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        accessStore.update((state) => {
+          // 剩余额度
+          localStorage.setItem("quota", res.data.quota);
+          const quotaPerUnit = parseFloat(
+            localStorage.getItem("quota_per_unit") || "0",
+          );
+          state.$quota = ((res.data.quota || 0) / quotaPerUnit).toFixed(2);
+        });
+      });
+  }, []);
   return <_Chat key={session.id}></_Chat>;
 }
