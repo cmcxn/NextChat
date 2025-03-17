@@ -1,13 +1,20 @@
 import { StateStorage } from "zustand/middleware";
-import { get, set, del, clear } from "idb-keyval";
+import { createStore, get, set, del, clear } from "idb-keyval";
 import { safeLocalStorage } from "@/app/utils";
-
 const localStorage = safeLocalStorage();
 
 class IndexedDBStorage implements StateStorage {
+  private store;
+
+  constructor(userName: any) {
+    if (typeof window != "undefined") {
+      this.store = createStore(`${userName}-database`, "user-store");
+    }
+  }
+
   public async getItem(name: string): Promise<string | null> {
     try {
-      const value = (await get(name)) || localStorage.getItem(name);
+      const value = (await get(name, this.store)) || localStorage.getItem(name);
       return value;
     } catch (error) {
       return localStorage.getItem(name);
@@ -21,7 +28,7 @@ class IndexedDBStorage implements StateStorage {
         console.warn("skip setItem", name);
         return;
       }
-      await set(name, value);
+      await set(name, value, this.store);
     } catch (error) {
       localStorage.setItem(name, value);
     }
@@ -29,7 +36,7 @@ class IndexedDBStorage implements StateStorage {
 
   public async removeItem(name: string): Promise<void> {
     try {
-      await del(name);
+      await del(name, this.store);
     } catch (error) {
       localStorage.removeItem(name);
     }
@@ -37,11 +44,12 @@ class IndexedDBStorage implements StateStorage {
 
   public async clear(): Promise<void> {
     try {
-      await clear();
+      await clear(this.store);
     } catch (error) {
       localStorage.clear();
     }
   }
 }
-
-export const indexedDBStorage = new IndexedDBStorage();
+export const indexedDBStorage = new IndexedDBStorage(
+  localStorage.getItem("username"),
+);
