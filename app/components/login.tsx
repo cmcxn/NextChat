@@ -92,16 +92,16 @@ export function LoginPage() {
                         );
                       }
                     });
-
-                  fetch(`/api/user/available_models`)
-                    .then((res3) => res3.json())
-                    .then((res3) => {
-                      storage.setItem(
-                        "available_models",
-                        JSON.stringify(res3.data),
-                      );
-                      goHome();
-                    });
+                  goHome();
+                  // fetch(`/api/user/available_models`)
+                  //   .then((res3) => res3.json())
+                  //   .then((res3) => {
+                  //     storage.setItem(
+                  //       "available_models",
+                  //       JSON.stringify(res3.data),
+                  //     );
+                  //
+                  //   });
                 });
             });
         } else {
