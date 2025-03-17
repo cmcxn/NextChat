@@ -92,7 +92,9 @@ export function LoginPage() {
                         );
                       }
                     });
-                  goHome();
+                  window.location.href = window.location.origin + "/#/chat";
+                  window.location.reload();
+                  // goHome();
                   // fetch(`/api/user/available_models`)
                   //   .then((res3) => res3.json())
                   //   .then((res3) => {
