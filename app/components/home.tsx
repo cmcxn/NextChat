@@ -44,7 +44,9 @@ export function Loading(props: { noLogo?: boolean }) {
     </div>
   );
 }
+import { safeLocalStorage } from "@/app/utils";
 
+const storage = safeLocalStorage();
 const Artifacts = dynamic(async () => (await import("./artifacts")).Artifacts, {
   loading: () => <Loading noLogo />,
 });
@@ -267,10 +269,65 @@ export function Home() {
     initMcp();
   }, []);
 
+  const accessStore = useAccessStore();
+  useEffect(() => {
+    // 获取个人信息
+    fetch("/api/user/self", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success) {
+          // 获取状态信息
+          fetch("/api/status", {
+            method: "GET",
+          })
+            .then((res1_2) => res1_2.json())
+            .then((res1_2) => {
+              // 配额_单位
+              storage.setItem("quota_per_unit", res1_2.data.quota_per_unit);
+              accessStore.update((state) => {
+                // 剩余额度
+                storage.setItem("quota", res.data.quota);
+                const quotaPerUnit = parseFloat(
+                  res1_2.data.quota_per_unit || "0",
+                );
+                state.$quota = ((res.data.quota || 0) / quotaPerUnit).toFixed(
+                  2,
+                );
+              });
+            });
+          // 更新模型服务商
+          accessStore.update(
+            (access) =>
+              (access.openaiUrl = process.env.NEXT_PUBLIC_SERVE_URL as string),
+          );
+          // 获取key
+          fetch(`/api/tk/`, {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + res.data.access_token,
+            },
+          })
+            .then((res2) => res2.json())
+            .then((res2) => {
+              if (Array.isArray(res2.data)) {
+                storage.setItem("key", "sk-" + res2.data?.[0]?.key);
+                accessStore.update(
+                  (access) =>
+                    (access.openaiApiKey = "sk-" + res2.data?.[0]?.key),
+                );
+              }
+            });
+        } else {
+          window.location.href = window.location.origin + "/#/login";
+        }
+      });
+  }, []);
+
   if (!useHasHydrated()) {
     return <Loading />;
   }
-
   return (
     <ErrorBoundary>
       <Router>
