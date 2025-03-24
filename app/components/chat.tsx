@@ -25,6 +25,7 @@ import MaskIcon from "../icons/mask.svg";
 import MaxIcon from "../icons/max.svg";
 import MinIcon from "../icons/min.svg";
 import LogoutIcon from "../icons/logout.svg";
+import TongbuIcon from "../icons/tongbu.svg";
 
 import ResetIcon from "../icons/reload.svg";
 import ReloadIcon from "../icons/reload.svg";
@@ -127,6 +128,7 @@ import { getModelProvider } from "../utils/model";
 import { RealtimeChat } from "@/app/components/realtime-chat";
 import clsx from "clsx";
 import { getAvailableClientsCount, isMcpEnabled } from "../mcp/actions";
+import { useSyncStore } from "../store/sync";
 
 const localStorage = safeLocalStorage();
 
@@ -1682,6 +1684,7 @@ function _Chat() {
   }, [messages, chatStore, navigate, session]);
 
   const [showChatSidePanel, setShowChatSidePanel] = useState(false);
+  const syncStore = useSyncStore();
 
   return (
     <>
@@ -1760,6 +1763,25 @@ function _Chat() {
                     config.update(
                       (config) => (config.tightBorder = !config.tightBorder),
                     );
+                  }}
+                />
+              </div>
+            )}
+            {showMaxIcon && (
+              <div className="window-action-button">
+                <IconButton
+                  icon={config.tightBorder ? <TongbuIcon /> : <TongbuIcon />}
+                  bordered
+                  title="同步"
+                  aria="同步"
+                  onClick={async () => {
+                    try {
+                      await syncStore.sync();
+                      showToast(Locale.Settings.Sync.Success);
+                    } catch (e) {
+                      showToast(Locale.Settings.Sync.Fail);
+                      console.error("[Sync]", e);
+                    }
                   }}
                 />
               </div>

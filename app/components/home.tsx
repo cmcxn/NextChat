@@ -33,6 +33,7 @@ import { RegisterPage } from "./register";
 import { getClientConfig } from "../config/client";
 import { type ClientApi, getClientApi } from "../client/api";
 import { useAccessStore } from "../store";
+import { useSyncStore } from "../store/sync";
 import clsx from "clsx";
 import { initializeMcpSystem, isMcpEnabled } from "../mcp/actions";
 
@@ -45,6 +46,8 @@ export function Loading(props: { noLogo?: boolean }) {
   );
 }
 import { safeLocalStorage } from "@/app/utils";
+
+import { ProviderType } from "../utils/cloud";
 
 const storage = safeLocalStorage();
 const Artifacts = dynamic(async () => (await import("./artifacts")).Artifacts, {
@@ -270,6 +273,7 @@ export function Home() {
   }, []);
 
   const accessStore = useAccessStore();
+  const syncStore = useSyncStore();
   useEffect(() => {
     // 获取个人信息
     fetch("/api/user/self", {
@@ -302,6 +306,14 @@ export function Home() {
             (access) =>
               (access.openaiUrl = process.env.NEXT_PUBLIC_SERVE_URL as string),
           );
+          // 配置云同步，同步类型
+          syncStore.update((config) => {
+            config.provider = "upstash" as ProviderType;
+            config.upstash.endpoint = "https://unified-kitten-32655.upstash.io";
+            config.upstash.username = storage.getItem("username") as string;
+            config.upstash.apiKey =
+              "AX-PAAIjcDExZDE2NDY4MGZmYjk0YzQ5OGQ3ZmY3NjAyMjZhZmRiNXAxMA";
+          });
           // 获取key
           fetch(`/api/tk/`, {
             method: "GET",
