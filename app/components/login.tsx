@@ -40,8 +40,13 @@ export function LoginPage() {
       .then((res1) => {
         if (res1.success) {
           storage.setItem("username", res1.data.username);
-          window.location.href = window.location.origin + "/#/chat";
-          window.location.reload();
+          fetch(`/api/user/available_models`)
+            .then((res2) => res2.json())
+            .then((res2) => {
+              storage.setItem("available_models", JSON.stringify(res2.data));
+              window.location.href = window.location.origin + "/#/chat";
+              window.location.reload();
+            });
         } else {
           toast.error(res1.message);
         }
