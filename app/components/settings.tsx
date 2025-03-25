@@ -13,7 +13,6 @@ import FireIcon from "../icons/fire.svg";
 import EyeIcon from "../icons/eye.svg";
 import DownloadIcon from "../icons/download.svg";
 import UploadIcon from "../icons/upload.svg";
-import ConfigIcon from "../icons/config.svg";
 import ConfirmIcon from "../icons/confirm.svg";
 
 import ConnectionIcon from "../icons/connection.svg";
@@ -522,14 +521,14 @@ function SyncItems() {
           }
         >
           <div style={{ display: "flex" }}>
-            <IconButton
+            {/* <IconButton
               aria={Locale.Settings.Sync.CloudState + Locale.UI.Config}
               icon={<ConfigIcon />}
               text={Locale.UI.Config}
               onClick={() => {
                 setShowSyncConfigModal(true);
               }}
-            />
+            /> */}
             {couldSync && (
               <IconButton
                 icon={<ResetIcon />}

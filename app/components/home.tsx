@@ -48,6 +48,8 @@ export function Loading(props: { noLogo?: boolean }) {
 import { safeLocalStorage } from "@/app/utils";
 
 import { ProviderType } from "../utils/cloud";
+import { getHeaders } from "../client/api";
+import { getModelProvider } from "../utils/model";
 
 const storage = safeLocalStorage();
 const Artifacts = dynamic(async () => (await import("./artifacts")).Artifacts, {
@@ -274,6 +276,7 @@ export function Home() {
 
   const accessStore = useAccessStore();
   const syncStore = useSyncStore();
+  const configStore = useAppConfig();
   useEffect(() => {
     // 获取个人信息
     fetch("/api/user/self", {
@@ -333,6 +336,25 @@ export function Home() {
             });
         } else {
           window.location.href = window.location.origin + "/#/login";
+        }
+      });
+    // 设置全局默认模型
+    fetch("/api/config", {
+      method: "post",
+      body: null,
+      headers: {
+        ...getHeaders(),
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        const defaultModel = res.defaultModel ?? "";
+        if (defaultModel !== "" && !useAppConfig.getState().modelConfig.model) {
+          configStore.update((config: any) => {
+            const [model, providerName] = getModelProvider(defaultModel);
+            config.modelConfig.model = model;
+            config.modelConfig.providerName = providerName as any;
+          });
         }
       });
   }, []);
