@@ -16,7 +16,7 @@ const custom = {
     UserInputValue: "输入用户名，最长 12 位",
     PasswordInputLabel: "密码：",
     PasswordInputPassword: "输入密码，最短 8 位，最长 20 位",
-    PasswordInputLabel2: "密码：",
+    PasswordInputLabel2: "重复密码：",
     PasswordInputPassword2: "输入密码，最短 8 位，最长 20 位",
     Confirm: "注册",
     SaasTips: "已有账号，立即去登录",
