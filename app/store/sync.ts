@@ -24,7 +24,7 @@ export type SyncStore = GetStoreState<typeof useSyncStore>;
 
 const DEFAULT_SYNC_STATE = {
   provider: ProviderType.WebDAV,
-  useProxy: true,
+  useProxy: false,
   proxyUrl: ApiPath.Cors as string,
 
   webdav: {
