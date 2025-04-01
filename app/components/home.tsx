@@ -304,11 +304,6 @@ export function Home() {
                 );
               });
             });
-          // 更新模型服务商
-          accessStore.update(
-            (access) =>
-              (access.openaiUrl = process.env.NEXT_PUBLIC_SERVE_URL as string),
-          );
           // 配置云同步，同步类型
           syncStore.update((config) => {
             config.provider = "upstash" as ProviderType;
@@ -338,7 +333,7 @@ export function Home() {
           window.location.href = window.location.origin + "/#/login";
         }
       });
-    // 设置全局默认模型
+    // 设置全局默认模型、接口地址
     fetch("/api/config", {
       method: "post",
       body: null,
@@ -354,6 +349,13 @@ export function Home() {
             const [model, providerName] = getModelProvider(defaultModel);
             config.modelConfig.model = model;
             config.modelConfig.providerName = providerName as any;
+          });
+        }
+        // 更新模型服务商
+        const baseUrl = res.baseUrl ?? "";
+        if (baseUrl !== "") {
+          accessStore.update((access) => {
+            access.openaiUrl = baseUrl;
           });
         }
       });
