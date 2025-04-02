@@ -44,10 +44,8 @@ export function LoginPage() {
             .then((res2) => res2.json())
             .then((res2) => {
               storage.setItem("available_models", JSON.stringify(res2.data));
-              window.location.href = window.location.origin + "/#/chat";
-              setTimeout(() => {
-                window.location.reload();
-              }, 5000);
+              window.location.hash = "/chat";
+              window.location.reload();
             });
         } else {
           toast.error(res1.message);
