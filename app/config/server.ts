@@ -176,7 +176,7 @@ export const getServerSideConfig = () => {
   ).split(",");
   const baseUrl = process.env.BASE_URL ?? "";
   const compressModel = process.env.COMPRESS_MODEL ?? "";
-  const useCustomConfig = process.env.USECUSTOM_CONFIG ?? "";
+  const useCustomConfig: any = process.env.USECUSTOM_CONFIG || false;
   return {
     useCustomConfig,
     compressModel,

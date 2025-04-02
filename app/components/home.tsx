@@ -368,8 +368,8 @@ export function Home() {
           });
         }
         // 是否使用自定义接口
-        const useCustomConfig = res.useCustomConfig ?? "";
-        if (useCustomConfig == "1") {
+        const useCustomConfig: any = res.useCustomConfig || false;
+        if (useCustomConfig == true) {
           accessStore.update((access) => {
             access.useCustomConfig = true;
           });
