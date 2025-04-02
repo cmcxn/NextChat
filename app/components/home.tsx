@@ -358,6 +358,22 @@ export function Home() {
             access.openaiUrl = baseUrl;
           });
         }
+        // 对话摘要模型
+        const compressModel = res.compressModel ?? "";
+        if (compressModel !== "") {
+          configStore.update((config: any) => {
+            const [model, providerName] = getModelProvider(compressModel);
+            config.modelConfig.compressModel = model;
+            config.modelConfig.compressProviderName = providerName as any;
+          });
+        }
+        // 是否使用自定义接口
+        const useCustomConfig = res.useCustomConfig ?? "";
+        if (useCustomConfig == "1") {
+          accessStore.update((access) => {
+            access.useCustomConfig = true;
+          });
+        }
       });
   }, []);
 

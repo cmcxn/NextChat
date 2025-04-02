@@ -16,6 +16,8 @@ const DANGER_CONFIG = {
   defaultModel: serverConfig.defaultModel,
   visionModels: serverConfig.visionModels,
   baseUrl: serverConfig.baseUrl,
+  compressModel: serverConfig.compressModel,
+  useCustomConfig: serverConfig.useCustomConfig,
 };
 
 declare global {
