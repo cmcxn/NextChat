@@ -47,7 +47,7 @@ export function LoginPage() {
               window.location.href = window.location.origin + "/#/chat";
               setTimeout(() => {
                 window.location.reload();
-              }, 500);
+              }, 5000);
             });
         } else {
           toast.error(res1.message);

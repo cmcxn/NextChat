@@ -175,8 +175,11 @@ export const getServerSideConfig = () => {
     process.env.WHITE_WEBDAV_ENDPOINTS ?? ""
   ).split(",");
   const baseUrl = process.env.BASE_URL ?? "";
-
+  const compressModel = process.env.COMPRESS_MODEL ?? "";
+  const useCustomConfig = process.env.USECUSTOM_CONFIG ?? "";
   return {
+    useCustomConfig,
+    compressModel,
     baseUrl,
     apiKey: getApiKey(process.env.OPENAI_API_KEY),
     openaiOrgId: process.env.OPENAI_ORG_ID,
