@@ -178,7 +178,8 @@ export const getServerSideConfig = () => {
   const compressModel = process.env.COMPRESS_MODEL ?? "";
   const useCustomConfig: any = process.env.USECUSTOM_CONFIG || false;
   return {
-    useCustomConfig,
+    useCustomConfig:
+      useCustomConfig == "true" || useCustomConfig == true ? true : false,
     compressModel,
     baseUrl,
     apiKey: getApiKey(process.env.OPENAI_API_KEY),
